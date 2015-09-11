@@ -1,7 +1,7 @@
 {
-  "name": "buycraft",
-  "version": "0.0.0",
-  "description": "A buycraft quickstart for themes",
+  "name": "roots-buycraft",
+  "version": "0.0.1",
+  "description": "A quickstart for buycraft themes",
   "scripts": {
     "test": "./node_modules/.bin/mocha"
   },
