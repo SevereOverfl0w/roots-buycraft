@@ -1,0 +1,8 @@
+{
+  "name": "<%= S(name).dasherize().value() %>",
+  "description": "A buycraft theme",
+  "dependencies": {
+    "css-pipeline": "0.2.x",
+    "ejs": "2.3.x"
+  }
+}
