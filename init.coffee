@@ -20,3 +20,4 @@ exports.beforeRender = (utils, config) ->
 exports.after = (utils, config) ->
   # after hook
   lib.createPage utils, config.url, 'index'
+  

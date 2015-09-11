@@ -15,7 +15,7 @@ absoluteURLs = (url, html) ->
 
 injectStyles = (url, html) ->
   html.replace /<\/head>/, (w) ->
-    '<%%- css() %>\n' + w
+    "<%%- css('/') %>\n" + w
 
 removeInlineStyle = (url, html) ->
   html.replace /<style>.*<\/style>/, ''
@@ -27,9 +27,12 @@ fixHtml = (url, html) ->
          .pipe removeInlineStyle
          .done()
 
-exports.createPage = (utils, url, filename) ->
+exports.createPage = (utils, url, filename, login=false) ->
   outputPath = Path.join 'views/', filename + '.ejs'
-  Axios.get url
+  Axios(
+        method: if login then "post" else "get"
+        url: url
+        data: if login then 'ign=Notch')
        .then (res) ->
          fixHtml url, res.data
        .then (html) ->
