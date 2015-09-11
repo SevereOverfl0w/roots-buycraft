@@ -8,8 +8,11 @@ A buycraft quickstart for themes
 - `sprout add buycraft git@github.com:SevereOverfl0w/buycraft.git`
 - `sprout new buycraft myproject `
 
+### Usage
+roots-buycraft produces a roots compatible directory structure.
+
+Simply use `roots watch` to start editing.
+
 ### Options
 
-- **name** (name of template)
-- **description** (a short description of the template)
-- **github_username** (name of github user)
+- **url** (url of buycraft store)
