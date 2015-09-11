@@ -1,5 +1,5 @@
-axios = require 'axios'
 url = require 'url'
+lib = require './lib'
 
 exports.configure = [
   {
@@ -7,31 +7,6 @@ exports.configure = [
     message: 'What is your Buycraft URL?'
   },
 ]
-
-chainer = (config, html) ->
-  {
-    pipe: (f) ->
-      chainer(config, f config, html)
-    done: () ->
-      html
-  }
-
-absoluteURLs = (config, html) ->
-  html.replace(/\/templates\//g, url.resolve(config.url, '/templates/'))
-
-injectStyles = (config, html) ->
-  html.replace /<\/head>/, (w) ->
-    '<%%- css() %>\n' + w
-
-removeInlineStyle = (config, html) ->
-  html.replace /<style>.*<\/style>/, ''
-
-fixHtml = (config, html) ->
-  chainer config, html
-         .pipe injectStyles
-         .pipe absoluteURLs
-         .pipe removeInlineStyle
-         .done()
 
 exports.before = (utils) ->
   # before hook
@@ -44,9 +19,4 @@ exports.beforeRender = (utils, config) ->
 
 exports.after = (utils, config) ->
   # after hook
-  axios.get config.url
-       .then (res) ->
-         fixHtml config, res.data
-       .then (html) ->
-         utils.target.write 'views/index.ejs', html
-
+  lib.createPage utils, config.url, 'index'
