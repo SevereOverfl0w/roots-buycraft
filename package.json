@@ -16,6 +16,8 @@
     "rimraf": "2.3.x"
   },
   "dependencies": {
-    "axios": "^0.5.4"
+    "axios": "^0.5.4",
+    "concat-stream": "^1.5.1",
+    "hyperstream": "^1.2.2"
   }
 }

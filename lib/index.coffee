@@ -1,32 +1,31 @@
 Axios = require 'axios'
 Url = require 'url'
 Path = require 'path'
-
-chainer = (url, html) ->
-  {
-    pipe: (f) ->
-      chainer(url, f url, html)
-    done: () ->
-      html
-  }
-
-absoluteURLs = (url, html) ->
-  html.replace(/\/templates\//g, Url.resolve(url, '/templates/'))
-
-injectStyles = (url, html) ->
-  html.replace /<\/head>/, (w) ->
-    "<%%- css('/') %>\n" + w
-
-removeInlineStyle = (url, html) ->
-  html.replace /<style>.*<\/style>/, ''
+Hyperstream = require 'hyperstream'
+Stream = require 'stream'
+Concat = require 'concat-stream'
 
 fixHtml = (url, html) ->
-  chainer url, html
-         .pipe injectStyles
-         .pipe absoluteURLs
-         .pipe removeInlineStyle
-         .done()
+  hs = Hyperstream({
+    head:
+      _appendHtml: "<%%- css('/') %>"
+    'style':
+      _html: ''
+    '[href^="/templates/"]':
+      href: prepend: url
+    '[src^="/templates/"]':
+      src: prepend: url
+  })
 
+  s = new Stream.Readable()
+  s.push html
+  s.push null
+
+  return new Promise (resolve, reject) ->
+    concatStream = Concat (data) ->
+      resolve(data.toString())
+
+    strOut = s.pipe(hs).pipe(concatStream)
 exports.createPage = (utils, url, filename, login=false) ->
   outputPath = Path.join 'views/', filename + '.ejs'
   Axios(
